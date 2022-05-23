@@ -8,16 +8,26 @@ body {
 
 h1 {
   font-size: 3rem;
+  margin-bottom: 0;
 }
 
 h2 {
   font-size: 2rem;
 }
 
-/* a {
-  color: inherit;
+.subtitle {
+  color: #999;
+}
+
+a {
+  color: #6588d8;
+  font-weight: bold;
   text-decoration: none;
-} */
+}
+
+a:hover {
+  color: #4366b5;
+}
 
 * {
   box-sizing: border-box;

@@ -10,33 +10,6 @@
   text-align: center;
 }
 
-.modal {
-  position: fixed;
-  width: 75%;
-  height: fit-content;
-  padding: 2rem;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  font-size: 1rem;
-  margin: auto;
-  box-shadow: 10px 10px 40px -3px rgba(107,107,107,0.65);
-  background-color: #fff;
-  max-width: 450px;
-  width: 75%;
-}
-
-.closeModalButton {
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ccc;
-  border-radius: 50%;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
+.tagWrapper > span {
   cursor: pointer;
 }
