@@ -3,6 +3,7 @@ import { useState } from 'react'
 import WordCloud from '../components/WordCloud'
 import Modal from '../components/Modal'
 import buildWordCloudData from '../utils/buildWordCloudData';
+import Head from 'next/head';
 
 export default function Home({topStories}) {
   const headlineTags = buildWordCloudData(topStories.map(story => story.title.split(' ')), topStories);
@@ -19,38 +20,45 @@ export default function Home({topStories}) {
     setTag(tag);
   }
 
+  const title = 'NY Times Word Cloud';
+
   return (
-    <div className={styles.container}>
-      <h1>NY Times World Cloud</h1>
-      <p className="subtitle">{`Generated from the top stories of ${today}`}</p>
-      <WordCloud
-        title="Headlines"
-        minSize={99}
-        maxSize={150}
-        tags={headlineTags}
-        colorHue="blue"
-        onTagClick={handleTagClick}
-      />
-      <WordCloud
-        title="Categories"
-        minSize={36}
-        maxSize={72}
-        tags={categoryTags}
-        colorHue="orange"
-        onTagClick={handleTagClick}
-      />
-      <Modal
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        title={`"${tag?.value}"`}
-      >
-        {tag?.props?.links?.map(link => (
-          <p key={link.headline}>
-            <a href={link.url} target="_blank" rel="noreferrer">{link.headline}</a>
-          </p>
-        ))}
-      </Modal>
-    </div>
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <div className={styles.container}>
+        <h1>{title}</h1>
+        <p className="subtitle">{`Generated from the top stories of ${today}`}</p>
+        <WordCloud
+          title="Headlines"
+          minSize={99}
+          maxSize={150}
+          tags={headlineTags}
+          colorHue="blue"
+          onTagClick={handleTagClick}
+        />
+        <WordCloud
+          title="Categories"
+          minSize={36}
+          maxSize={72}
+          tags={categoryTags}
+          colorHue="orange"
+          onTagClick={handleTagClick}
+        />
+        <Modal
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          title={`"${tag?.value}"`}
+        >
+          {tag?.props?.links?.map(link => (
+            <p key={link.headline}>
+              <a href={link.url} target="_blank" rel="noreferrer">{link.headline}</a>
+            </p>
+          ))}
+        </Modal>
+      </div>
+    </>
   )
 }
 
