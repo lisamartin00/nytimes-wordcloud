@@ -4,14 +4,21 @@ import WordCloud from '../components/WordCloud'
 import Modal from '../components/Modal'
 import buildWordCloudData from '../utils/buildWordCloudData';
 import Head from 'next/head';
+import useSWR from 'swr';
 
-export default function Home({topStories}) {
-  const headlineTags = buildWordCloudData(topStories.map(story => story.title.split(' ')), topStories);
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
-  const categoryTags = buildWordCloudData(topStories.map(story => story.des_facet, topStories), topStories);
-
+export default function Home() {
+  const { data, error } = useSWR(`https://api.nytimes.com/svc/topstories/v2/home.json?api-key=${process.env.NEXT_PUBLIC_API_KEY}`, fetcher);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tag, setTag] = useState();
+
+  if (error) return <div>Failed to load</div>
+
+  const topStories = data?.results;
+  const headlineTags = buildWordCloudData(topStories?.map(story => story.title.split(' ')), topStories);
+
+  const categoryTags = buildWordCloudData(topStories?.map(story => story.des_facet, topStories), topStories);
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -30,49 +37,39 @@ export default function Home({topStories}) {
       <div className={styles.container}>
         <h1>{title}</h1>
         <p className="subtitle">{`Generated from the top stories of ${today}`}</p>
-        <WordCloud
-          title="Headlines"
-          minSize={99}
-          maxSize={150}
-          tags={headlineTags}
-          colorHue="blue"
-          onTagClick={handleTagClick}
-        />
-        <WordCloud
-          title="Categories"
-          minSize={36}
-          maxSize={72}
-          tags={categoryTags}
-          colorHue="orange"
-          onTagClick={handleTagClick}
-        />
-        <Modal
-          isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
-          title={`"${tag?.value}"`}
-        >
-          {tag?.props?.links?.map(link => (
-            <p key={link.headline}>
-              <a href={link.url} target="_blank" rel="noreferrer">{link.headline}</a>
-            </p>
-          ))}
-        </Modal>
+        { !data && <div className="loader"></div> }
+        { data && (
+        <>
+          <WordCloud
+            title="Headlines"
+            minSize={99}
+            maxSize={150}
+            tags={headlineTags}
+            colorHue="blue"
+            onTagClick={handleTagClick}
+          />
+          <WordCloud
+            title="Categories"
+            minSize={36}
+            maxSize={72}
+            tags={categoryTags}
+            colorHue="orange"
+            onTagClick={handleTagClick}
+          />
+          <Modal
+            isOpen={isModalOpen}
+            closeModal={() => setIsModalOpen(false)}
+            title={`"${tag?.value}"`}
+          >
+            {tag?.props?.links?.map(link => (
+              <p key={link.headline}>
+                <a href={link.url} target="_blank" rel="noreferrer">{link.headline}</a>
+              </p>
+            ))}
+          </Modal>
+        </>
+      )}
       </div>
     </>
   )
-}
-
-export async function getStaticProps() {
-  const topStoriesRes = await fetch(`https://api.nytimes.com/svc/topstories/v2/home.json?api-key=${process.env.API_KEY}`);
-  const topStoriesJson = await topStoriesRes.json();
-
-  return {
-    props: {
-      topStories: topStoriesJson.results,
-    },
-    // Next.js will attempt to re-generate the page:
-    // - When a request comes in
-    // - At most once every 10 minutes
-    revalidate: 600, // In seconds
-  }
 }

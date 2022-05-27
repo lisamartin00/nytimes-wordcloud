@@ -1,14 +1,14 @@
 const blacklist = [
-  'of', 'to', 'is', 'in', 'on', 'it\'s', 'and', 'the', 'isnt', 'how', 'with', 'has', 'after', 'he', 'she', 'a', 'an', 'about', 'your', 'isnt', 'its', 'this', 'what', 'i', 'have', 'one', 'two', 'had', 'then', 'it', 'from', 'that', 'should', 'when', 'was', 'than', 'internalstorylineno', 'some', 'at', 'more', 'where', 'we', 'for', 'you', 'quiz', 'my', 'other', 'didnt', 'internal-sub-only-nl',
+  'of', 'to', 'is', 'in', 'on', 'it\'s', 'and', 'the', 'isnt', 'how', 'with', 'has', 'after', 'he', 'she', 'a', 'an', 'about', 'your', 'isnt', 'its', 'this', 'what', 'i', 'have', 'one', 'two', 'had', 'then', 'it', 'from', 'that', 'should', 'when', 'was', 'than', 'internalstorylineno', 'some', 'at', 'more', 'where', 'we', 'for', 'you', 'quiz', 'my', 'other', 'didnt', 'internal-sub-only-nl', 'be', 'are', 'not', 'gets', 'audio-neutral-informative', 'by', 'his', 'her', 'could', 'can', 'them', 'do',
 ];
 
 const buildWordCloudData = (stories, topStories,) => {
   const wordList = [];
   const wordCloudData = [];
   const articleList = [];
-  stories.forEach((story, index,) => {
-    story.forEach((word,) => {
-      const wordKey = word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=_`~?’—]|(content type)|(\(.*\))/g, '',);
+  stories?.forEach((story, index,) => {
+    story?.forEach((word,) => {
+      const wordKey = word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=_`~?’—‘]|(content type)|(\(.*\))/g, '',);
       if (blacklist.includes(wordKey)) return; // bail out here
       const count = wordList[wordKey];
       const isReservedWord = typeof count === 'function';

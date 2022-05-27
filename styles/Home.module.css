@@ -13,3 +13,11 @@
 .tagWrapper > span {
   cursor: pointer;
 }
+
+@media only screen and (max-width: 600px) {
+  .tagWrapper > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
